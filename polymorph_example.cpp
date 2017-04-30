@@ -1,13 +1,20 @@
-
-
 #include <iostream>
 #include <cstdlib>
-#include <list>
 using namespace std;
 
 class Base {
+private:
+	Base* next;
 public:
 	virtual void print() = 0;
+
+	Base* getNext() {
+		return next;
+	}
+
+	void setNext(Base* next) {
+		this->next = next;
+	}
 };
 
 class String : public Base {
@@ -42,25 +49,32 @@ public:
 };
 
 int main () {
-	list<Base*> mylist;
-	Base* p;
+
+	Base* start= new Float(1.0);
+	Base* prev= start;
+	Base* temp;
 
 	for (int i=0; i<20; i++) {
 		if (i%3 == 0) {
-			p = new String(to_string(i*10));
+			temp = new String(to_string(i*10));
 		}
 		else if(i%3 == 1) {
-			p = new Complex(i*3, -i*7.2);
+			temp = new Complex(i*3, -i*7.2);
 		}
 		else {
-			p = new Float(i*2.819381);
+			temp = new Float(i*2.819381);
 		}
-		mylist.push_back(p);
+		prev->setNext(temp);
+		prev=temp;
 	}
 
-	for (list<Base*>::iterator q = mylist.begin(); q!=mylist.end(); q++) {
-		(*q)->print();
-	}
+
+	start->print();
+	temp=start;
+	while(temp->getNext()) {
+		temp->getNext()->print();
+		temp=temp->getNext();
+	}	
 
 	return 0;
 }
