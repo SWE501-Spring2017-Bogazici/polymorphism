@@ -1,66 +1,72 @@
-
-
 #include <iostream>
-#include <cstdlib>
 #include <list>
+
 using namespace std;
 
 class Base {
+    Base* next;
+
 public:
-	virtual void print() = 0;
+    // pure virtual function
+    virtual void print() = 0;
+
+    Base() {
+        next = nullptr;
+    }
+
+    Base* getNext() const {
+        return next;
+    }
+
+    void setNext(Base *next) {
+        Base::next = next;
+    }
 };
 
 class String : public Base {
 protected:
-	string s;
+    string s;
 public:
-	String(string x) : s(x) {};
-	void print() {
-		cout << "'" << s << "' ";
-	}
+    String(string x) : s(x) {}
+
+    void print() {
+        cout << "'" << s << "' ";
+    }
 };
 
 class Float : public Base {
 protected:
-	float f;
+    float f;
 public:
-	Float(float x) : f(x) {};
-	void print() {
-		cout << f << " ";
-	}
+    Float(float x) : f(x) {}
+
+    void print() {
+        cout << "'" << f << "' ";
+    }
 };
 
-class Complex : public Base {
-protected:
-	float re;
-	float im;
-public:
-	Complex(float a, float b) : re(a),im(b) {};
-	void print() {
-		cout << re << "+ j(" << im << ") ";
-	}
-};
+int main() {
 
-int main () {
-	list<Base*> mylist;
-	Base* p;
+    Base *p1 = new String("abc");
+    Base *p = p1;
 
-	for (int i=0; i<20; i++) {
-		if (i%3 == 0) {
-			p = new String(to_string(i*10));
-		}
-		else if(i%3 == 1) {
-			p = new Complex(i*3, -i*7.2);
-		}
-		else {
-			p = new Float(i*2.819381);
-		}
-		mylist.push_back(p);
-	}
+    for (int i = 0; i < 10; i++) {
+        if (i % 2 == 1) {
+            Base *p2 = new String("abc");
+            p1->setNext(p2);
+        } else {
+            Base *p3 = new Float(i + 2.5f);
+            p1->setNext(p3);
+        }
+        p1 = p1->getNext();
+    }
 
-	for (list<Base*>::iterator q = mylist.begin(); q!=mylist.end(); q++) {
-		(*q)->print();
-	}
+    cout << " *** Print elements *** " << endl;
 
-	return 0;
+    while (p->getNext() != nullptr) {
+        p->print();
+        p = p->getNext();
+    }
+
+    return 0;
 }
